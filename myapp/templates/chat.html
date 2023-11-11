@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Chat Window</title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link rel="stylesheet" href="/static/chat.css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css"
+  <meta charset="UTF-8">
+  <title>Chat Window</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link rel="stylesheet" href="/static/chat.css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css"
     rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"></script>
 </head>
+
 <body>
   <div class="container">
     <div class="container-header">
@@ -85,11 +89,16 @@
           </div>
           <div class="type_msg">
             <div class="input_msg_write">
-              <form id="chat_form">
-                <input type="text" class="message" placeholder="Type a message" />
-                <button class="msg_send_btn" type="submit">
-                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                </button>
+              <form id="chat_form" class="msger-inputarea">
+                <input type="text" class="message msger-input" placeholder="Type a message" />
+                <span class="btn-right">
+                  <button class="msg_file_btn">
+                    <i class="fa fa-paperclip" aria-hidden="true"></i>
+                  </button>
+                  <button class="msg_send_btn" type="submit">
+                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                  </button>
+                </span>
               </form>
             </div>
 
@@ -154,8 +163,8 @@
         timestamp: Date.now() / 1000,
         sender_username: "{{ user_data['username'] }}",
         sender_id: {{ user_data["id"] }},
-        message : user_input,
-        rid: '{{ room_id }}'
+      message : user_input,
+      rid: '{{ room_id }}'
         } )
     //scrollDown();
     $('div.msg_history').append(`
@@ -201,7 +210,7 @@
       // Return the time format string.
       return timeFormat;
     }
- </script>
+  </script>
 
   <script>
     window.onload = function () {
@@ -224,4 +233,5 @@
     }
   </script>
 </body>
+
 </html>
