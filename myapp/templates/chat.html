@@ -4,10 +4,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Chat Window</title>
+
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <link rel="stylesheet" href="/static/chat.css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+
+  <!-- Bootstrap 4.4 -->
+
+  <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css"
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
@@ -87,11 +104,68 @@
             {% endif %}
             {% endfor %}
           </div>
+          <div class="right">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+              Hide
+            </button>
+            <button class="btn-primary">
+              Unhide
+            </button>
+          </div>
+
+          <!-- class="modal fade"  -->
+          <div id="myModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>×</span></button>
+                  <button type="submit" class="btn btn-primary">Done</button>
+                </div>
+                <div class="modal-body">
+                  <!-- <form method="POST" action="{{ url_for('views.new_chat') }}" id="new_chat_form"> -->
+
+                  <form id="hideForm" method="post" enctype="multipart/form-data" novalidate=""
+                    class="box has-advanced-upload">
+                    <div class="box-input container">
+                      <div class="upload-icon p-2">
+                        <img id="preview" src="../static/images/upload-icon.svg" width="30" />
+                        <button id="clearPreview" class="close" aria-label="Close" style="display:none">
+                          <span>×</span>
+                        </button>
+                      </div>
+
+                      <div class="text-center">
+                        <input type="file" id="coverFile" class="box-file">
+                        <!-- <input type="file" name="files[]" id="file" class="box-file"
+                          data-multiple-caption="{count} files selected" multiple=""> -->
+                        <label id="fileLabel" for="coverFile" class="primary-text">Click here to upload the
+                          file</label>
+
+                        <div>
+                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                            placeholder="Your secret text">
+                        </div>
+                        <div>
+                          <button id="#hideData" type="button" class="btn btn-primary  m-2">Hide me</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <!-- <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Hide me</button>
+                </div> -->
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+
           <div class="type_msg">
             <div class="input_msg_write">
               <form id="chat_form" class="msger-inputarea">
                 <input type="text" class="message msger-input" placeholder="Type a message" />
-                <span class="btn-right">
+                <span class="padding-10">
                   <button class="msg_file_btn">
                     <i class="fa fa-paperclip" aria-hidden="true"></i>
                   </button>
@@ -105,14 +179,8 @@
           </div>
         </div>
       </div>
-
-      <p class="text-center top_spac"> Design by
-        <a target="_blank" href="https://www.linkedin.com/in/sunil-rajput-nattho-singh/">Sunil Rajput</a>
-      </p>
     </div>
   </div>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
   <script type="text/javascript">
 
@@ -193,6 +261,8 @@
     })
 
   </script>
+
+  <!-- Format date -->
   <script>
     function formatDate(date) {
       // Get the hours, minutes, and seconds from the Date object.
@@ -212,6 +282,7 @@
     }
   </script>
 
+  <!-- Chat function -->
   <script>
     window.onload = function () {
       let newChatBtn = document.querySelector('#new_chat_btn');
@@ -230,6 +301,47 @@
           newChatoverlay.style.display = 'none';
         }
       }
+    }
+  </script>
+
+  <!-- Preview image -->
+  <script>
+    $("#coverFile").on('change', function (event) {
+      console.log("change");
+
+      readURL(this);
+      event.preventDefault();
+    });
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        var filename = $("#coverFile").val();
+        filename = filename.substring(filename.lastIndexOf('\\') + 1);
+        reader.onload = function (e) {
+          console.log("hello");
+          $('#preview').attr('src', e.target.result);
+          $('#preview').css('width', '279');
+          $('#preview').hide();
+          $('#preview').fadeIn(500);
+          $('#clearPreview').show();
+          $('#fileLabel').hide();
+        }
+        reader.readAsDataURL(input.files[0]);
+
+      }
+    }
+
+    $('#clearPreview').click(function (event) {
+      clearPreview();
+      event.preventDefault();
+    });
+
+    function clearPreview() {
+      $('#preview').show();
+      $('#preview').attr('src', '../static/images/upload-icon.svg')
+      $('#preview').css('width', '30');
+      $('#clearPreview').hide();
+      $('#fileLabel').show();
     }
   </script>
 </body>
