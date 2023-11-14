@@ -118,13 +118,11 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>×</span></button>
-                  <button type="submit" class="btn btn-primary">Done</button>
+                  <button type="button" class="btn btn-primary">Done</button>
                 </div>
                 <div class="modal-body">
-                  <!-- <form method="POST" action="{{ url_for('views.new_chat') }}" id="new_chat_form"> -->
-
-                  <form id="hideForm" method="post" enctype="multipart/form-data" novalidate=""
-                    class="box has-advanced-upload">
+                  <form id="hideForm" method="post" action="{{ url_for('views.hide_data') }}"
+                    enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
                     <div class="box-input container">
                       <div class="upload-icon p-2">
                         <img id="preview" src="../static/images/upload-icon.svg" width="30" />
@@ -134,18 +132,18 @@
                       </div>
 
                       <div class="text-center">
-                        <input type="file" id="coverFile" class="box-file">
+                        <input type="file" id="cover-file" class="box-file" name="cover-file">
                         <!-- <input type="file" name="files[]" id="file" class="box-file"
                           data-multiple-caption="{count} files selected" multiple=""> -->
-                        <label id="fileLabel" for="coverFile" class="primary-text">Click here to upload the
+                        <label id="fileLabel" for="cover-file" class="primary-text">Click here to upload the
                           file</label>
 
                         <div>
-                          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                          <input type="text" class="form-control" id="secret-text" name="secret-text"
                             placeholder="Your secret text">
                         </div>
                         <div>
-                          <button id="#hideData" type="button" class="btn btn-primary  m-2">Hide me</button>
+                          <button id="#hideData" type="submit" class="btn btn-primary  m-2">Hide me</button>
                         </div>
 
                       </div>
@@ -210,7 +208,7 @@
     }
 
     // SOCKET CODE
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/?rid=' + {{ room_id }} );
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/?rid=' + "{{ room_id }}");
     //scrollDown()
     socket.on('connect', function () {
       socket.emit('join-chat', {
@@ -229,22 +227,22 @@
       socket.emit('outgoing', {
         timestamp: Date.now() / 1000,
         sender_username: "{{ user_data['username'] }}",
-        sender_id: {{ user_data["id"] }},
-      message : user_input,
-      rid: '{{ room_id }}'
-        } )
-    //scrollDown();
-    $('div.msg_history').append(`
+        sender_id: "{{ user_data['id'] }}",
+        message: user_input,
+        rid: '{{ room_id }}'
+      })
+      //scrollDown();
+      $('div.msg_history').append(`
             <div class="outgoing_msg">
               <div class="sent_msg">
                 <p>${user_input}</p>
                 <span class="time_date"> ${formatDate(new Date())}</span> </div>
             </div>
           `)
-    document.getElementById("last-message").innerHTML = user_input
-    $('input.message').val('').focus()
-    scrollDown();
-        } )
+      document.getElementById("last-message").innerHTML = user_input
+      $('input.message').val('').focus()
+      scrollDown();
+    })
 
     socket.on('message', function (msg) {
       $('div.msg_history').append(`<div class="incoming_msg">
@@ -305,19 +303,16 @@
 
   <!-- Preview image -->
   <script>
-    $("#coverFile").on('change', function (event) {
-      console.log("change");
-
+    $("#cover-file").on('change', function (event) {
       readURL(this);
       event.preventDefault();
     });
     function readURL(input) {
       if (input.files && input.files[0]) {
         var reader = new FileReader();
-        var filename = $("#coverFile").val();
+        var filename = $("#cover-file").val();
         filename = filename.substring(filename.lastIndexOf('\\') + 1);
         reader.onload = function (e) {
-          console.log(e.target.result);
           $('#preview').attr('src', e.target.result);
           $('#preview').css('width', '279');
           $('#preview').hide();

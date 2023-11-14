@@ -5,6 +5,8 @@ from functools import wraps
 import pandas as pd
 import matplotlib.pyplot as plt
 from myapp import socket
+import requests
+import json
 
 views = Blueprint('views', __name__, static_folder='static', template_folder='templates')
 
@@ -259,3 +261,42 @@ def leave():
     """
     socket.emit('disconnect')
     return redirect(url_for('views.home'))
+
+
+@views.route('/hide', methods=["GET", "POST"])
+def hide_data():
+    if request.method == "POST":
+        
+        cover_image = request.files["cover-file"] # FileStorage obj 
+        filepath = cover_image.filename # Not full file path
+        # print (filepath)
+
+        secret_text = request.form["secret-text"]
+
+        # TODO: Replace the URL with ours
+        URL = 'https://mocki.io/v1/022f2429-42ac-4cae-ae31-6ace6f8af476'
+
+        headers = {"Content-Type": "application/json; charset=utf-8"}
+
+        
+        # with open(filepath, 'rb') as fobj:
+        #     response = requests.post(url, headers=headers, files={'file': fobj})
+        
+        # print("Status Code", response.status_code)
+        # print("JSON Response ", response.json())
+
+    
+        response = requests.post(URL, 
+                                 headers=headers, 
+                                 files={'file': cover_image}, 
+                                 json= {"secret_text": secret_text})
+        try:
+            # Convert the JSON string to a Python object
+            python_obj = json.loads(response.text)
+            # Example: {"stego_image":"https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Lenna_%28test_image%29.png/220px-Lenna_%28test_image%29.png"}
+            stegoPath = python_obj["stego_image"]
+            
+            return redirect(url_for("views.chat"))
+        except ValueError as e:
+            print("Error:", e)
+    return "Hello"
