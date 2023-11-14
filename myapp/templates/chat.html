@@ -113,8 +113,7 @@
             </button>
           </div>
 
-          <!-- class="modal fade"  -->
-          <div id="myModal" tabindex="-1" role="dialog">
+          <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -318,7 +317,7 @@
         var filename = $("#coverFile").val();
         filename = filename.substring(filename.lastIndexOf('\\') + 1);
         reader.onload = function (e) {
-          console.log("hello");
+          console.log(e.target.result);
           $('#preview').attr('src', e.target.result);
           $('#preview').css('width', '279');
           $('#preview').hide();
